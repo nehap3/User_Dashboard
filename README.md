@@ -151,19 +151,3 @@ npm run dev
 - Implement read replicas for scaling reads
 - Use MongoDB Atlas for managed scaling
 
-**Architecture:**
-- Separate concerns into microservices if needed
-- Add message queues for async operations
-- Implement proper logging and monitoring
-
----
-
-## 👨‍💻 Author
-
-Built for Frontend Developer Internship Assignment
-
----
-
-## 📄 License
-
-MIT License
