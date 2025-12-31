@@ -18,6 +18,15 @@ A scalable web application with authentication and dashboard functionality, buil
 
 ---
 
+## 🌐 Live Demo
+
+| Service | URL |
+|---------|-----|
+| **Frontend** | [https://user-dashboard-44bb-ipm53ozyl-nehap3s-projects.vercel.app](https://user-dashboard-44bb-ipm53ozyl-nehap3s-projects.vercel.app) |
+| **Backend API** | [https://backend-service-sv0j.onrender.com](https://backend-service-sv0j.onrender.com) |
+
+---
+
 ## ✅ Features Implemented
 
 ### Authentication
