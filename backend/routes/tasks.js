@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 
 const router = express.Router();
 
-// Get tasks
+// Get all tasks for logged-in user
 router.get("/", auth, async (req, res) => {
   try {
     const tasks = await Task.find({ user: req.user.id }).sort({ createdAt: -1 });
@@ -14,47 +14,27 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// Add task
+// Create a new task
 router.post("/", auth, async (req, res) => {
   try {
     const { title } = req.body;
-    if (!title?.trim()) return res.status(400).json({ msg: "Title required" });
-
-    const task = await Task.create({ title: title.trim(), user: req.user.id });
+    const task = new Task({ title, user: req.user.id });
+    await task.save();
     res.json(task);
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
   }
 });
 
-// Update task
-router.put("/:id", auth, async (req, res) => {
-  try {
-    console.log("PUT request:", req.params.id, req.body);
-
-    const { title } = req.body;
-    if (!title?.trim()) return res.status(400).json({ msg: "Title required" });
-
-    const task = await Task.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id },
-      { title: title.trim() },
-      { new: true }
-    );
-
-    if (!task) return res.status(404).json({ msg: "Task not found" });
-
-    res.json(task);
-  } catch (err) {
-    console.error("Update error:", err.message);
-    res.status(500).json({ msg: "Server error" });
-  }
-});
-
-// Delete task
+// Delete a task
 router.delete("/:id", auth, async (req, res) => {
   try {
-    const task = await Task.findOneAndDelete({ _id: req.params.id, user: req.user.id });
+    const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ msg: "Task not found" });
+    if (task.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Not authorized" });
+    }
+    await Task.findByIdAndDelete(req.params.id);
     res.json({ msg: "Task deleted" });
   } catch (err) {
     res.status(500).json({ msg: "Server error" });
