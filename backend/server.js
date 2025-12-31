@@ -7,8 +7,20 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
 app.use(express.json());
+app.set("trust proxy", 1);
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:3000",
+      "https://user-dashboard-232k8h4yd-nehap3s-projects.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 
