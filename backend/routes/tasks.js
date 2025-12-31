@@ -26,6 +26,26 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+// Update a task
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const { title } = req.body;
+    let task = await Task.findById(req.params.id);
+    if (!task) return res.status(404).json({ msg: "Task not found" });
+    if (task.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: "Not authorized" });
+    }
+    task = await Task.findByIdAndUpdate(
+      req.params.id,
+      { title },
+      { new: true }
+    );
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
 // Delete a task
 router.delete("/:id", auth, async (req, res) => {
   try {
