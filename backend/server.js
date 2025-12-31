@@ -13,11 +13,20 @@ app.set("trust proxy", 1);
 
 app.use(
     cors({
-        origin: [
-            "http://localhost:5173",
-            "http://localhost:3000",
-            "https://user-dashboard-232k8h4yd-nehap3s-projects.vercel.app",
-        ],
+        origin: function (origin, callback) {
+            const allowedOrigins = [
+                "http://localhost:5173",
+                "http://localhost:3000",
+                "https://user-dashboard-232k8h4yd-nehap3s-projects.vercel.app",
+            ];
+            // Allow requests with no origin (mobile apps, curl, etc)
+            if (!origin) return callback(null, true);
+            // Allow any vercel.app subdomain
+            if (origin.endsWith('.vercel.app') || allowedOrigins.includes(origin)) {
+                return callback(null, true);
+            }
+            callback(new Error('Not allowed by CORS'));
+        },
         credentials: true,
     })
 );
